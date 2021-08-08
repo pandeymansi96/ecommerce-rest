@@ -11,6 +11,12 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    const VERIFIED_USER = 1;
+    const UNVERIFIED_USER =0;
+
+    const ADMIN_USER = 1;
+    const REGULAR_USER = 0;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +26,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'email_verified_at',
+        'verified',
+        'verification_token',
+        'admin'
     ];
 
     /**
@@ -40,4 +50,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isVerified()
+    {
+        return $this->verified == self::VERIFIED_USER;
+    }
+
+    public function isAdmin()
+    {
+        return $this->admin == self::ADMIN_USER;
+    }
+
+    public function generateVerificationCode()
+    {
+        return Str::random(40);
+    }
 }
